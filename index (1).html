@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Pixel Paint</title>
+
+<style>
+    body {
+        margin: 0;
+        font-family: Arial, sans-serif;
+        background-color: #121212;
+        color: white;
+        text-align: center;
+    }
+
+    #home-screen {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        height: 100vh;
+        gap: 20px;
+    }
+
+    h1 {
+        font-size: 40px;
+        font-weight: bold;
+        color: #00b7ff;
+        letter-spacing: 2px;
+    }
+
+    #start-btn {
+        padding: 15px 30px;
+        font-size: 20px;
+        border: none;
+        border-radius: 10px;
+        background-color: #00b7ff;
+        color: black;
+        cursor: pointer;
+        transition: 0.3s;
+    }
+    #start-btn:hover {
+        background-color: #008ccc;
+    }
+
+    #editor {
+        display: none;
+        padding-top: 20px;
+    }
+
+    #grid {
+        display: grid;
+        grid-template-columns: repeat(16, 20px);
+        margin: 20px auto;
+        width: max-content;
+    }
+
+    .pixel {
+        width: 20px;
+        height: 20px;
+        background: white;
+        border: 1px solid #333;
+        cursor: pointer;
+    }
+
+    #save-btn {
+        margin-top: 20px;
+        padding: 10px 20px;
+        font-size: 18px;
+        border: none;
+        background-color: #00ff6a;
+        color: black;
+        cursor: pointer;
+        border-radius: 8px;
+    }
+</style>
+</head>
+<body>
+
+<div id="home-screen">
+    <h1>PIXEL PAINT</h1>
+    <p>Crie desenhos usando pixels e solte sua criatividade!</p>
+    <button id="start-btn">Começar a Pintar</button>
+</div>
+
+<div id="editor">
+    <h2>Editor de Pixels</h2>
+    <div id="grid"></div>
+    <button id="save-btn">Salvar Desenho</button>
+</div>
+
+<script>
+const grid = document.getElementById("grid");
+for (let i = 0; i < 16 * 16; i++) {
+    const pixel = document.createElement("div");
+    pixel.classList.add("pixel");
+
+    pixel.addEventListener("click", () => {
+        pixel.style.backgroundColor =
+            pixel.style.backgroundColor === "white" ? "black" : "white";
+    });
+
+    grid.appendChild(pixel);
+}
+
+document.getElementById("start-btn").onclick = () => {
+    document.getElementById("home-screen").style.display = "none";
+    document.getElementById("editor").style.display = "block";
+};
+
+document.getElementById("save-btn").onclick = () => {
+    const canvas = document.createElement("canvas");
+    canvas.width = 160;
+    canvas.height = 160;
+    const ctx = canvas.getContext("2d");
+
+    const pixels = document.querySelectorAll(".pixel");
+    pixels.forEach((pixel, i) => {
+        const x = (i % 16) * 10;
+        const y = Math.floor(i / 16) * 10;
+
+        ctx.fillStyle = pixel.style.backgroundColor || "white";
+        ctx.fillRect(x, y, 10, 10);
+    });
+
+    const link = document.createElement("a");
+    link.download = "meu_desenho.png";
+    link.href = canvas.toDataURL();
+    link.click();
+};
+</script>
+
+</body>
+</html>
